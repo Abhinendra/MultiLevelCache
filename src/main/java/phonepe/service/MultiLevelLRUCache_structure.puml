@@ -1,0 +1,160 @@
+@startuml
+
+/' diagram meta data start
+config=StructureConfiguration;
+{
+  "projectClassification": {
+    "searchMode": "OpenProject", // OpenProject, AllProjects
+    "includedProjects": "",
+    "pathEndKeywords": "*.impl",
+    "isClientPath": "",
+    "isClientName": "",
+    "isTestPath": "",
+    "isTestName": "",
+    "isMappingPath": "",
+    "isMappingName": "",
+    "isDataAccessPath": "",
+    "isDataAccessName": "",
+    "isDataStructurePath": "",
+    "isDataStructureName": "",
+    "isInterfaceStructuresPath": "",
+    "isInterfaceStructuresName": "",
+    "isEntryPointPath": "",
+    "isEntryPointName": "",
+    "treatFinalFieldsAsMandatory": false
+  },
+  "graphRestriction": {
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "removeByInheritance": "", // inheritance/annotation based filtering is done in a second step
+    "removeByAnnotation": "",
+    "removeByClassPackage": "", // cleanup the graph after inheritance/annotation based filtering is done
+    "removeByClassName": "",
+    "cutMappings": false,
+    "cutEnum": true,
+    "cutTests": true,
+    "cutClient": true,
+    "cutDataAccess": false,
+    "cutInterfaceStructures": false,
+    "cutDataStructures": false,
+    "cutGetterAndSetter": true,
+    "cutConstructors": true
+  },
+  "graphTraversal": {
+    "forwardDepth": 6,
+    "backwardDepth": 6,
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "hideMappings": false,
+    "hideDataStructures": false,
+    "hidePrivateMethods": true,
+    "hideInterfaceCalls": true, // indirection: implementation -> interface (is hidden) -> implementation
+    "onlyShowApplicationEntryPoints": false, // root node is included
+    "useMethodCallsForStructureDiagram": "ForwardOnly" // ForwardOnly, BothDirections, No
+  },
+  "details": {
+    "aggregation": "GroupByClass", // ByClass, GroupByClass, None
+    "showClassGenericTypes": true,
+    "showMethods": true,
+    "showMethodParameterNames": true,
+    "showMethodParameterTypes": true,
+    "showMethodReturnType": true,
+    "showPackageLevels": 2,
+    "showDetailedClassStructure": true
+  },
+  "rootClass": "phonepe.service.MultiLevelLRUCache",
+  "extensionCallbackMethod": "" // qualified.class.name#methodName - signature: public static String method(String)
+}
+diagram meta data end '/
+
+
+
+digraph g {
+    rankdir="TB"
+    splines=polyline
+    
+
+'nodes 
+subgraph cluster_104069929 { 
+   	label=model
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   CacheData625072478[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)CacheData&lt;K, V&gt;</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   key: K [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   value: V [0..1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+
+subgraph cluster_1984153269 { 
+   	label=service
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   LRUCache156429226[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)LRUCache&lt;K, V&gt;</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   linkedList: LinkedList&lt;CacheData&lt;K, V&gt;&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   lock: ReadWriteLock [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   map: Map&lt;K, CacheData&lt;K, V&gt;&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   readLock: Lock [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   size: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   writeLock: Lock [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- maintainSize()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ read(key: K): V</TD></TR>
+<TR><TD ALIGN="LEFT" >+ write(key: K, value: V): boolean</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+MultiLevelLRUCache156429226[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)MultiLevelLRUCache&lt;K, V&gt;</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   levels: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   multiLevelCache: Map&lt;Integer, LRUCache&lt;K, V&gt;&gt; [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ read(key: K): V</TD></TR>
+<TR><TD ALIGN="LEFT" >+ write(key: K, value: V): boolean</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+
+'edges    
+LRUCache156429226 -> CacheData625072478[label="linkedList
+[0..1]"];
+LRUCache156429226 -> CacheData625072478[label="map
+[0..1]"];
+MultiLevelLRUCache156429226 -> LRUCache156429226[arrowhead=none];
+MultiLevelLRUCache156429226 -> LRUCache156429226[label="multiLevelCache
+[0..1]"];
+    
+}
+@enduml
